@@ -28,8 +28,23 @@ public class Kata5P1 {
         }
     }
     
+    public static void createNewTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS EMAIL (\n"
+        + " id integer PRIMARY KEY AUTOINCREMENT,\n"
+        + " mail text NOT NULL);";
+        try (
+            Connection conn = connect();
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    
     public static void main(String[] args) {
-        selectAll();
+        //selectAll();
+        createNewTable();
     }
     
     private static Connection connect() throws SQLException {
