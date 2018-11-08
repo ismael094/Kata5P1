@@ -2,9 +2,14 @@ package kata5p1;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static kata5p1.MailListReader.read;
 
 
 public class Kata5P1 {
@@ -40,11 +45,30 @@ public class Kata5P1 {
             System.out.println(e.getMessage());
         }
     }
+    
+    public static void insert(String email) {
+        String sql = "INSERT INTO EMAIL(mail) VALUES(?)";
+        try (
+            Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
 
     
     public static void main(String[] args) {
-        //selectAll();
-        createNewTable();
+        try {
+            List<String> emails = read("email.txt");
+            for (int i = 0;i<emails.size();i++) {
+                insert(emails.get(i));
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
     }
     
     private static Connection connect() throws SQLException {
